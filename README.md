@@ -1,6 +1,6 @@
 # MEAN clean app v.2
 
-Version 2 of the MEAN project configuration I use for development. Enhanced version with separate endpoints for the backend and frontend. 
+V.2 of the MEAN build environment I use for development. Enhanced version with separate endpoints for the backend and frontend. The setup uses Gulp, Express, Angular, Jade, and Stylus, with autoreloading (see setup notes below for details).
 
 ## Setup
 
