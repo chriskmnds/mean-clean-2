@@ -5,7 +5,6 @@
   
   .constant('appVersion', document.querySelector('html').getAttribute('data-app-version'))
   .constant('nodeApiAddr', document.querySelector('html').getAttribute('node-api-addr'))
-  .constant('maxUsers', 8)
     
   .config(function($locationProvider, appVersion, $stateProvider, $urlRouterProvider) {
     $locationProvider.html5Mode(true);
