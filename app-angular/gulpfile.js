@@ -23,7 +23,9 @@ var
     runSequence = require('run-sequence'),
     stylish = require('jshint-stylish'),
     vinylPaths = require('vinyl-paths'),
-    plumber = require('gulp-plumber');
+    plumber = require('gulp-plumber'),
+    source = require('vinyl-source-stream'),
+    config = require('./lib/config');
 
 var sources = {
   jshint: {
@@ -45,7 +47,7 @@ var sources = {
   dest: './public/' + pkg.version
 };
 
-// Vendor/bower plugins to load in specified order
+// Vendor & bower plugins to load in specified order
 var bowerfiles = {
   css: [
     'public/' + pkg.version + '/vendor/bootstrap/css/bootstrap.min.css',
@@ -102,6 +104,13 @@ gulp.task('lint:tests', function() {
     .pipe(plugins.jshint.reporter(stylish));
 });
 
+gulp.task('make:copy:config', function() {
+  //get and publish Config module
+  var stream = source('_config.js');
+  stream.end(config.configModule(pkg));
+  stream.pipe(gulp.dest(sources.dest + '/js/app'));
+});
+
 gulp.task('copy:css', function() {
   return gulp.src(sources.stylus, { base: './client/' })
     .pipe(plugins.stylus(stylusOptions))
@@ -155,12 +164,12 @@ gulp.task('clean', function() {
 gulp.task('lint', ['lint:client']);
 
 gulp.task('build:dev', ['lint'], function() {
-  runSequence('clean', ['copy:css', 'copy:html', 'copy:js', 'copy:index', 'copy:fonts', 'copy:img', 'copy:json', 'copy:bower'], 'inject:dev', 'server', watch);
+  runSequence('clean', ['make:copy:config', 'copy:css', 'copy:html', 'copy:js', 'copy:index', 'copy:fonts', 'copy:img', 'copy:json', 'copy:bower'], 'inject:dev', 'server', watch);
 });
 
 gulp.task('build:prod', ['lint'], function() {
-  //runSequence('clean', ['copy:css', 'copy:html', 'copy:js', 'copy:index', 'copy:fonts', 'copy:img', 'copy:json', 'copy:bower'], 'optimize', 'inject:prod', 'clean:prod'); // proper production setup
-  runSequence('clean', ['copy:css', 'copy:html', 'copy:js', 'copy:index', 'copy:fonts', 'copy:img', 'copy:json', 'copy:bower'], 'inject:dev');
+  //runSequence('clean', ['make:copy:config', 'copy:css', 'copy:html', 'copy:js', 'copy:index', 'copy:fonts', 'copy:img', 'copy:json', 'copy:bower'], 'optimize', 'inject:prod', 'clean:prod'); // proper production setup
+  runSequence('clean', ['make:copy:config', 'copy:css', 'copy:html', 'copy:js', 'copy:index', 'copy:fonts', 'copy:img', 'copy:json', 'copy:bower'], 'inject:dev');
 });
 
 // inject file references in /public/index.html at specified locations [uses gulp-inject]
@@ -170,11 +179,13 @@ gulp.task('inject:dev', function() {
   var jsServiceFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/services/*.js']);
   var jsDirectiveFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/directives/*.js']);
   var jsControllerFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/controllers/*.js']);
+  var jsConfigFile = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/_config.js']);
   var jsAppFile = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/*.js']);
-  var allFiles = cssFiles.concat(jsFilterFiles).concat(jsServiceFiles).concat(jsDirectiveFiles).concat(jsControllerFiles).concat(jsAppFile);
+  var allFiles = cssFiles.concat(jsFilterFiles).concat(jsServiceFiles).concat(jsDirectiveFiles).concat(jsControllerFiles).concat(jsConfigFile).concat(jsAppFile);
 
   var orderOfTheFiles = bowerfiles.css.concat(['main.css']);
   orderOfTheFiles = orderOfTheFiles.concat(bowerfiles.js);
+  orderOfTheFiles = orderOfTheFiles.concat(['_config.js']);
   orderOfTheFiles = orderOfTheFiles.concat(['_app.js']);
   orderOfTheFiles = getOrderOfTheFiles(orderOfTheFiles);
 
@@ -199,7 +210,7 @@ gulp.task('optimize', function() {
     .pipe(gulp.dest(sources.dest + '/css'));
 
   var jsFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/**/*.js']);
-  var orderOfTheFiles = getOrderOfTheFiles(bowerfiles.js.concat(['_app.js']));
+  var orderOfTheFiles = getOrderOfTheFiles(bowerfiles.js.concat(['_config.js', '_app.js']));
 
   var processJS = gulp.src(jsFiles)
     .pipe(plugins.order(orderOfTheFiles))
