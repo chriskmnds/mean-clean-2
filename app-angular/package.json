@@ -1,11 +1,15 @@
 {
   "name": "myapp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "nodeApi": "http://localhost:3000",
-  "description": "Startup App",
+  "description": "Mashup/visualisation of various city/village statistics",
+  "configs": {
+    "app_title": "CityStats Mashup",
+    "node_api_base_url": "http://localhost:3000/api"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chriskmnds/mean-clean-2.git"
+    "url": "https://github.com/chriskmnds/citystats-mashup.git"
   },
   "scripts": {
     "start": "gulp",
@@ -44,6 +48,9 @@
     "vinyl-paths": "^1.0.0"
   },
   "dependencies": {
-    "bower": "1.4.1"
+    "bower": "1.4.1",
+    "fs": "0.0.2",
+    "nconf": "^0.8.4",
+    "vinyl-source-stream": "^1.1.0"
   }
 }
