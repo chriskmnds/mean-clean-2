@@ -188,7 +188,7 @@ gulp.task('inject:dev', function() {
   orderOfTheFiles = orderOfTheFiles.concat(bowerfiles.js);
   orderOfTheFiles = orderOfTheFiles.concat(['_config.js']);
   orderOfTheFiles = orderOfTheFiles.concat(['_app.js']);
-  orderOfTheFiles = getOrderOfTheFiles(orderOfTheFiles);
+  orderOfTheFiles = getOrderOfTheFiles(orderOfTheFiles);//strip paths...
 
   var allFilesStream = gulp.src(allFiles, { read: false })
     .pipe(plugins.order(orderOfTheFiles));
@@ -344,6 +344,7 @@ function deletePath(loc) {
   return path.dirname(newPath) + '/' + end;
 }
 
+// Strip paths and keep only filenames
 function getOrderOfTheFiles(files) {
   var orderOfTheFiles = files;
 
