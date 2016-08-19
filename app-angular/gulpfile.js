@@ -25,7 +25,8 @@ var
     vinylPaths = require('vinyl-paths'),
     plumber = require('gulp-plumber'),
     source = require('vinyl-source-stream'),
-    config = require('./lib/config');
+    config = require('./lib/config'),
+    iife = require('gulp-iife');
 
 var sources = {
   jshint: {
@@ -210,22 +211,32 @@ gulp.task('optimize', function() {
     .pipe(plugins.minifyCss())
     .pipe(gulp.dest(sources.dest + '/css'));
 
-  var jsFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/**/*.js']);
-  var orderOfTheFiles = getOrderOfTheFiles(bowerfiles.js.concat(['_config.js', '_app.js']));
+  var jsVendor = bowerfiles.js.concat([]);
+  var orderOfTheVendorFiles = getOrderOfTheFiles(bowerfiles.js.concat([]));
+  
+  var jsApp = ['public/' + pkg.version + '/js/**/*.js'];
+  var orderOfTheAppFiles = ['_config.js', '_app.js'];
 
-  var processJS = gulp.src(jsFiles)
-    .pipe(plugins.order(orderOfTheFiles))
+  var processJSVendor = gulp.src(jsVendor)
+    .pipe(plugins.order(orderOfTheVendorFiles))
+    .pipe(plugins.concat('vendor.min.js'))
+    .pipe(plugins.uglify())
+    .pipe(gulp.dest(sources.dest + '/js'));
+  
+  var processJSApp = gulp.src(jsApp)
+    .pipe(plugins.order(orderOfTheAppFiles))
     .pipe(plugins.ngAnnotate())
     .pipe(plugins.concat('app.min.js'))
     .pipe(plugins.uglify())
+    .pipe(iife())
     .pipe(gulp.dest(sources.dest + '/js'));
 
-  return merge(processCSS, processJS);
+  return merge(processCSS, processJSVendor, processJSApp);
 });
 
 // inject minified/uglified file references in /public/index.html at specified locations [uses gulp-inject]
 gulp.task('inject:prod', function() {
-  var allFiles = gulp.src([sources.dest + '/css/app.min.css', sources.dest + '/js/app.min.js'], { read: false });
+  var allFiles = gulp.src([sources.dest + '/css/app.min.css', sources.dest + '/js/vendor.min.js', sources.dest + '/js/app.min.js'], { read: false });
 
   return gulp.src('./public/index.html')
     .pipe(plugins.inject(allFiles, injectOptions))// will insert after <!-- inject:css --> and <!-- inject:js -->
@@ -235,9 +246,10 @@ gulp.task('inject:prod', function() {
 
 // remove all dev code and keep only minified/uglified files in production
 gulp.task('clean:prod', function() {
-  return gulp.src([sources.dest + '/bower_components/', sources.dest + '/css/**/*', '!' + sources.dest + '/css/app.min.css', sources.dest + '/js/**/*', '!' + sources.dest + '/js/app.min.js'], { read: false })
+  return gulp.src([sources.dest + '/bower_components/', sources.dest + '/css/**/*', '!' + sources.dest + '/css/app.min.css', sources.dest + '/js/**/*', '!' + sources.dest + '/js/app.min.js', '!' + sources.dest + '/js/vendor.min.js'], { read: false })
     .pipe(vinylPaths(del));
 });
+
 
 gulp.task('default', ['build:dev']);
 
