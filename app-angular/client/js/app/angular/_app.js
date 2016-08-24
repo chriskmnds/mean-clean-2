@@ -27,6 +27,7 @@
         controller: 'ErrorCtrl'
       });
   })
+  
   .run(function($state, $rootScope, $window, $location) {
     $rootScope.doingResolve = true;
   });
