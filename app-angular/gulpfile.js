@@ -26,7 +26,9 @@ var
     plumber = require('gulp-plumber'),
     source = require('vinyl-source-stream'),
     config = require('./lib/config'),
-    iife = require('gulp-iife');
+    iife = require('gulp-iife'),
+    nodemon = require('gulp-nodemon'),
+    _ = require('lodash');
 
 var sources = {
   jshint: {
@@ -77,16 +79,16 @@ var stylusOptions = {
   'include css': true
 };
 
-var injectOptions = { relative: true, addRootSlash: true };
+var injectOptions = { relative: false, addRootSlash: true , ignorePath: '/public'};
 
 // fonts etc. e.g. '//fonts.googleapis.com/css?family=Lato'
 var cssCDN = [];
 
-var cssCode = '\n\n';
-var spacing = '    ';
+var cssCode = '';
+var spacing = '\n    ';
 
 cssCDN.forEach(function(value) {
-  cssCode += spacing + '<link rel="stylesheet" href="' + value + '" />\n';
+  cssCode += spacing + 'link(rel="stylesheet", href="' + value + '")';
 });
 
 gulp.task('lint:client', function() {
@@ -129,11 +131,11 @@ gulp.task('copy:js', function() {
     .pipe(gulp.dest(sources.dest));
 });
 
-gulp.task('copy:index', function() {
+/*gulp.task('copy:index', function() {
   return gulp.src(sources.index)
     .pipe(plugins.jade(jadeOptions))
     .pipe(gulp.dest('./public/'));
-});
+});*/
 
 gulp.task('copy:html', function() {
   return gulp.src(['./client/html/templates/**/*.jade', './client/html/directives/**/*.jade'], { base: './client/html/' })
@@ -165,12 +167,12 @@ gulp.task('clean', function() {
 gulp.task('lint', ['lint:client']);
 
 gulp.task('build:dev', ['lint'], function() {
-  runSequence('clean', ['make:copy:config', 'copy:css', 'copy:html', 'copy:js', 'copy:index', 'copy:fonts', 'copy:img', 'copy:json', 'copy:bower'], 'inject:dev', 'server', watch);
+  runSequence('clean', ['make:copy:config', 'copy:css', 'copy:html', 'copy:js', 'copy:fonts', 'copy:img', 'copy:json', 'copy:bower'], 'inject:dev', 'server', watch);
 });
 
 gulp.task('build:prod', ['lint'], function() {
-  //runSequence('clean', ['make:copy:config', 'copy:css', 'copy:html', 'copy:js', 'copy:index', 'copy:fonts', 'copy:img', 'copy:json', 'copy:bower'], 'optimize', 'inject:prod', 'clean:prod'); // proper production setup
-  runSequence('clean', ['make:copy:config', 'copy:css', 'copy:html', 'copy:js', 'copy:index', 'copy:fonts', 'copy:img', 'copy:json', 'copy:bower'], 'inject:dev');
+  runSequence('clean', ['make:copy:config', 'copy:css', 'copy:html', 'copy:js', 'copy:fonts', 'copy:img', 'copy:json', 'copy:bower'], 'optimize', 'inject:prod', 'clean:prod', 'server'); // proper production setup
+  //runSequence('clean', ['make:copy:config', 'copy:css', 'copy:html', 'copy:js', 'copy:fonts', 'copy:img', 'copy:json', 'copy:bower'], 'inject:dev');
 });
 
 // inject file references in /public/index.html at specified locations [uses gulp-inject]
@@ -182,7 +184,7 @@ gulp.task('inject:dev', function() {
   var jsDirectiveFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/angular/directives/*.js']);
   var jsControllerFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/angular/controllers/*.js']);
   var jsAppFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/angular/*.js']);
-  var allFiles = cssFiles.concat(jsOtherFiles).concat(jsFilterFiles).concat(jsServiceFiles).concat(jsDirectiveFiles).concat(jsControllerFiles).concat(jsAppFile);
+  var allFiles = cssFiles.concat(jsOtherFiles).concat(jsFilterFiles).concat(jsServiceFiles).concat(jsDirectiveFiles).concat(jsControllerFiles).concat(jsAppFiles);
 
   // Prioritise/order some of some files to be injected first
   var orderOfTheFiles = bowerfiles.css.concat(['main.css']);
@@ -194,11 +196,16 @@ gulp.task('inject:dev', function() {
 
   var allFilesStream = gulp.src(allFiles, { read: false })
     .pipe(plugins.order(orderOfTheFiles));
-
-  return gulp.src('./public/index.html')
+  
+  return gulp.src('./views/layouts/basic.jade', {base: './'})
+    .pipe(plugins.inject(allFilesStream, injectOptions))// will insert after <!-- inject:css --> and <!-- inject:js -->
+    .pipe(plugins.injectString.after('inject:css', cssCode))//add cssCDN and other files
+    .pipe(gulp.dest('.'));
+  
+  /*return gulp.src('./public/index.html')
     .pipe(plugins.inject(allFilesStream, injectOptions))// will insert after <!-- inject:css --> and <!-- inject:js -->
     .pipe(plugins.injectString.after('<!-- inject:css -->', cssCode))//add cssCDN and other files
-    .pipe(gulp.dest('./public'));
+    .pipe(gulp.dest('./public'));//*/
 });
 
 // minify css and uglify js code in production
@@ -238,11 +245,16 @@ gulp.task('optimize', function() {
 // inject minified/uglified file references in /public/index.html at specified locations [uses gulp-inject]
 gulp.task('inject:prod', function() {
   var allFiles = gulp.src([sources.dest + '/css/app.min.css', sources.dest + '/js/vendor.min.js', sources.dest + '/js/app.min.js'], { read: false });
+  
+  return gulp.src('./views/layouts/basic.jade', {base: './'})
+    .pipe(plugins.inject(allFiles, injectOptions))// will insert after <!-- inject:css --> and <!-- inject:js -->
+    .pipe(plugins.injectString.after('inject:css', cssCode))//add cssCDN and other files
+    .pipe(gulp.dest('.'));
 
-  return gulp.src('./public/index.html')
+  /*return gulp.src('./public/index.html')
     .pipe(plugins.inject(allFiles, injectOptions))// will insert after <!-- inject:css --> and <!-- inject:js -->
     .pipe(plugins.injectString.after('<!-- inject:css -->', cssCode))//add cssCDN and other files
-    .pipe(gulp.dest('./public/'));
+    .pipe(gulp.dest('./public/'));*/
 });
 
 // remove all dev code and keep only minified/uglified files in production
@@ -255,23 +267,31 @@ gulp.task('clean:prod', function() {
 gulp.task('default', ['build:dev']);
 
 gulp.task('server', function() {
-  return gulp.src('./public')
+  return nodemon({script: 'app.js', cwd: __dirname})
+    //.on('start', watch)
+    //.on('change', watch)
+    .on('restart', function () {
+      console.log('restarted!');
+    });
+  /*return gulp.src('./public')
     .pipe(plugins.webserver({
       livereload: true,
       open: true,
       https: false,
       fallback: 'index.html'
-    }));
+    }));//*/
 });
+
+
 
 
 function watch() {
   gulp.watch('client/**/*.js', fileChanged('js'));
   gulp.watch('client/**/*.styl', ['copy:css']);
   gulp.watch(['client/**/*.jade', '!client/html/layouts/**/*.jade'], fileChanged('jade'));
-  gulp.watch(['client/html/layouts/**/*.jade'], function() {
-    return runSequence(['copy:html', 'copy:index'], 'inject:dev');
-  });
+  //gulp.watch(['client/html/layouts/**/*.jade'], function() {
+  //  return runSequence(['copy:html', 'copy:index'], 'inject:dev');
+  //});
   gulp.watch('client/fonts/**/*', ['copy:fonts']);
   gulp.watch('client/img/**/*', ['copy:img']);
 }

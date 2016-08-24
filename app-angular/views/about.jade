@@ -1,0 +1,10 @@
+extends layouts/basic
+
+append title
+  title(ng-bind="pageTitle")
+
+
+append content
+  div This is about.jade
+  div(ui-view)
+  

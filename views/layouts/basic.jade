@@ -1,0 +1,36 @@
+doctype html
+html(data-ng-app=pkg.name, lang="en", data-ng-controller="BaseCtrl")
+  head
+    block title
+
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    base(href="/")
+    block stylesheets
+
+    //- inject:css
+    link(rel="stylesheet", href="//fonts.googleapis.com/css?family=Lato")
+    link(rel="stylesheet", href="/public/0.0.1/vendor/bootstrap/css/bootstrap.min.css")
+    link(rel="stylesheet", href="/public/0.0.1/css/main.css")
+    //- endinject
+
+    block scripts
+
+  body(ng-cloak)
+    
+    block content
+
+    //- inject:js
+    script(src="/public/0.0.1/bower_components/angular/angular.min.js")
+    script(src="/public/0.0.1/bower_components/angular-animate/angular-animate.min.js")
+    script(src="/public/0.0.1/bower_components/angular-sanitize/angular-sanitize.min.js")
+    script(src="/public/0.0.1/bower_components/angular-ui-router/release/angular-ui-router.min.js")
+    script(src="/public/0.0.1/js/app/other/utils.js")
+    script(src="/public/0.0.1/js/app/angular/_config.js")
+    script(src="/public/0.0.1/js/app/angular/_app.js")
+    script(src="/public/0.0.1/js/app/angular/controllers/BaseCtrl.js")
+    script(src="/public/0.0.1/js/app/angular/services/common.js")
+    script(src="/public/0.0.1/js/app/angular/controllers/ErrorCtrl.js")
+    script(src="/public/0.0.1/js/app/angular/controllers/MainCtrl.js")
+    //- endinject
