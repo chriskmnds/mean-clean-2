@@ -181,7 +181,7 @@ gulp.task('inject:dev', function() {
   var jsServiceFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/angular/services/*.js']);
   var jsDirectiveFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/angular/directives/*.js']);
   var jsControllerFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/angular/controllers/*.js']);
-  var jsAppFile = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/angular/*.js']);
+  var jsAppFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/angular/*.js']);
   var allFiles = cssFiles.concat(jsOtherFiles).concat(jsFilterFiles).concat(jsServiceFiles).concat(jsDirectiveFiles).concat(jsControllerFiles).concat(jsAppFile);
 
   // Prioritise/order some of some files to be injected first
