@@ -109,7 +109,7 @@ gulp.task('make:copy:config', function() {
   //get and publish Config module
   var stream = source('_config.js');
   stream.end(config.configModule(pkg));
-  stream.pipe(gulp.dest(sources.dest + '/js/app'));
+  stream.pipe(gulp.dest(sources.dest + '/js/app/angular'));
 });
 
 gulp.task('copy:css', function() {
@@ -176,17 +176,18 @@ gulp.task('build:prod', ['lint'], function() {
 // inject file references in /public/index.html at specified locations [uses gulp-inject]
 gulp.task('inject:dev', function() {
   var cssFiles = bowerfiles.css.concat(['public/' + pkg.version + '/css/main.css']);
-  var jsFilterFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/filters/*.js']);
-  var jsServiceFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/services/*.js']);
-  var jsDirectiveFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/directives/*.js']);
-  var jsControllerFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/controllers/*.js']);
-  var jsConfigFile = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/_config.js']);
-  var jsAppFile = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/*.js']);
-  var allFiles = cssFiles.concat(jsFilterFiles).concat(jsServiceFiles).concat(jsDirectiveFiles).concat(jsControllerFiles).concat(jsConfigFile).concat(jsAppFile);
-  
+  var jsOtherFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/other/**/*.js']);
+  var jsFilterFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/angular/filters/*.js']);
+  var jsServiceFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/angular/services/*.js']);
+  var jsDirectiveFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/angular/directives/*.js']);
+  var jsControllerFiles = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/angular/controllers/*.js']);
+  var jsAppFile = bowerfiles.js.concat(['public/' + pkg.version + '/js/app/angular/*.js']);
+  var allFiles = cssFiles.concat(jsOtherFiles).concat(jsFilterFiles).concat(jsServiceFiles).concat(jsDirectiveFiles).concat(jsControllerFiles).concat(jsAppFile);
+
   // Prioritise/order some of some files to be injected first
   var orderOfTheFiles = bowerfiles.css.concat(['main.css']);
   orderOfTheFiles = orderOfTheFiles.concat(bowerfiles.js);
+  orderOfTheFiles = orderOfTheFiles.concat(['public/' + pkg.version + '/js/app/other/utils.js']);
   orderOfTheFiles = orderOfTheFiles.concat(['_config.js']);
   orderOfTheFiles = orderOfTheFiles.concat(['_app.js']);
   orderOfTheFiles = getOrderOfTheFiles(orderOfTheFiles);//strip paths...
