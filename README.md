@@ -39,7 +39,11 @@ The backend and frontend are bundled as different endpoints. The backend is a No
 
 This should start the application (`http://localhost:8000`) in a new browser window. 
 
-**Notes**: The gulp script in the root of app-angular watches for files in the `client` folder and reloads in the browser any changes made. The project uses JADE and Stylus instead of HTML/CSS for fast prototyping. A `public` folder is created with all the compiled sources, but that never needs to be edited in any way. There are options in the gulp file to inject the resulting JS scrips as a single minified iife-wrapped file for production or multiple files in development (current mode is development).
+#### Notes: 
+
+The gulp script in the root of app-angular watches for files in the `client` folder and reloads in the browser any changes made. The project uses JADE and Stylus instead of HTML/CSS for fast prototyping. A `public` folder is created with all the compiled sources, but that never needs to be edited in any way. There are options in the gulp file to inject the resulting JS scrips as a single minified iife-wrapped file for production or multiple files in development (current mode is development).
+
+The config module is created and added to `/public/.../js/app/angular` via a gulp task (relevant methods in `lib/config`).
 
 
 ## Pulling/Cloning
