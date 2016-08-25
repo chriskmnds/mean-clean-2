@@ -5,6 +5,9 @@ append title
 
 
 append content
-  div This is about.jade
+  div App: #{pkg.name}
+  div Page: #{name}
+  div(ng-hide="doingResolve") This is about.jade
   div(ui-view)
   
+

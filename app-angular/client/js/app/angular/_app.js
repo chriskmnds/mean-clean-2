@@ -8,9 +8,16 @@
     $urlRouterProvider.otherwise('/404');
     
     $stateProvider
-    
+      
       .state('main', {
         url: '/',
+        templateUrl: '/' + CONFIG.appVersion + '/templates/main.html',
+        controller: 'MainCtrl',
+        resolve: {
+        }
+      })
+      .state('about', {
+        url: '/about',
         templateUrl: '/' + CONFIG.appVersion + '/templates/main.html',
         controller: 'MainCtrl',
         resolve: {

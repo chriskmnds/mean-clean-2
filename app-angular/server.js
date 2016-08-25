@@ -1,39 +1,48 @@
 var express = require('express'),
     bodyParser  = require('body-parser'),
     morgan = require('morgan'),
-    pkg = require('./package.json');
+    pkg = require('./package.json'),
+    path = require('path');
 
 var app = module.exports.app = exports.app = express();
 //var http = require('http').Server(app);
 
-var viewOptions = {
+var PORT = process.env.PORT || 8000;
+
+process.env.NODE_ENV = pkg.configs.node_env || 'development';
+
+// output environment information
+console.log('------------------------------');
+console.log('Node:\t\t' + process.version);
+console.log('Environment:\t' + process.env.NODE_ENV);
+console.log('Working dir:\t' + process.cwd());
+console.log('------------------------------');
+
+// view options
+app.locals = {
   pretty: true,
   compileDebug: false,
   pkg:pkg
 };
 
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 //app.set('view options', jadeOptions);//deprecated
 
-app.locals = viewOptions;
-
-// Setup static resource serving
+// setup static resource serving
 app.use('/', express.static(__dirname + '/public'));
 
 // use bodyparser so we can grab information from POST requests
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-// log all requests to the console
-app.use(morgan('dev'));
+// setup routes
+require('./routes')(app);
 
-
-app.get('/', function(req,res) {
-  res.render('index');
-});
-
-var server = app.listen(8000, function() {
-  console.log('Listening on port 8000');
+// start server
+var server = app.listen(PORT, function() {
+  console.log('Listening on port ' + PORT);
 });//*/
 
 

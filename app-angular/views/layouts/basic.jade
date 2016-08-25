@@ -10,8 +10,7 @@ html(data-ng-app=pkg.name, lang="en", data-ng-controller="BaseCtrl")
     block stylesheets
 
     //- inject:css
-    link(rel="stylesheet", href="/0.0.1/vendor/bootstrap/css/bootstrap.min.css")
-    link(rel="stylesheet", href="/0.0.1/css/main.css")
+    link(rel="stylesheet", href="/0.0.3/css/app.min.css")
     //- endinject
 
     block scripts
@@ -20,15 +19,6 @@ html(data-ng-app=pkg.name, lang="en", data-ng-controller="BaseCtrl")
     
     block content
     //- inject:js
-    script(src="/0.0.1/bower_components/angular/angular.min.js")
-    script(src="/0.0.1/bower_components/angular-animate/angular-animate.min.js")
-    script(src="/0.0.1/bower_components/angular-sanitize/angular-sanitize.min.js")
-    script(src="/0.0.1/bower_components/angular-ui-router/release/angular-ui-router.min.js")
-    script(src="/0.0.1/js/app/other/utils.js")
-    script(src="/0.0.1/js/app/angular/_config.js")
-    script(src="/0.0.1/js/app/angular/_app.js")
-    script(src="/0.0.1/js/app/angular/controllers/BaseCtrl.js")
-    script(src="/0.0.1/js/app/angular/services/common.js")
-    script(src="/0.0.1/js/app/angular/controllers/ErrorCtrl.js")
-    script(src="/0.0.1/js/app/angular/controllers/MainCtrl.js")
+    script(src="/0.0.3/js/vendor.min.js")
+    script(src="/0.0.3/js/app.min.js")
     //- endinject

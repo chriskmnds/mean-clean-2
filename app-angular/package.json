@@ -1,10 +1,11 @@
 {
   "name": "myapp",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "nodeApi": "http://localhost:3000",
-  "description": "Mashup/visualisation of various city/village statistics",
+  "description": "Frontend of startup app",
   "configs": {
-    "app_title": "CityStats Mashup",
+    "node_env": "production",
+    "app_title": "NEW APP",
     "node_api_base_url": "http://localhost:3000/api"
   },
   "repository": {
@@ -50,6 +51,7 @@
     "lodash": "^4.15.0",
     "merge-stream": "^0.1.5",
     "morgan": "^1.7.0",
+    "path": "^0.12.7",
     "run-sequence": "^1.0.2",
     "vinyl-paths": "^1.0.0"
   },

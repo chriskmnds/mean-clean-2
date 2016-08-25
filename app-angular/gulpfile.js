@@ -27,8 +27,7 @@ var
     source = require('vinyl-source-stream'),
     config = require('./lib/config'),
     iife = require('gulp-iife'),
-    nodemon = require('gulp-nodemon'),
-    _ = require('lodash');
+    nodemon = require('gulp-nodemon');
 
 var sources = {
   jshint: {
@@ -41,12 +40,9 @@ var sources = {
       jshintrc: './tests/.jshintrc'
     }
   },
-
   stylus: './client/css/main.styl',
-
   jade: ['./client/**/*.jade', '!./client/html/index.jade'],
   index: './client/html/index.jade',
-
   dest: './public/' + pkg.version
 };
 
@@ -55,7 +51,6 @@ var bowerfiles = {
   css: [
     'public/' + pkg.version + '/vendor/bootstrap/css/bootstrap.min.css',
   ],
-
   js: [
     'public/' + pkg.version + '/bower_components/angular/angular.min.js',
     'public/' + pkg.version + '/bower_components/angular-animate/angular-animate.min.js',
@@ -264,10 +259,10 @@ gulp.task('clean:prod', function() {
 });
 
 
-gulp.task('default', ['build:dev']);
+gulp.task('default', ['build:' + (pkg.configs.node_env === 'production' ? 'prod' : 'dev')]);
 
 gulp.task('server', function() {
-  return nodemon({script: 'app.js', cwd: __dirname})
+  return nodemon({script: 'server.js', cwd: __dirname})
     //.on('start', watch)
     //.on('change', watch)
     .on('restart', function () {
