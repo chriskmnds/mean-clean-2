@@ -1,4 +1,4 @@
-# MEAN clean app
+# MEAN clean project root
 
 MEAN build environment I use for development. Enhanced version with separate endpoints for the backend and frontend. The setup uses Gulp, Express, Angular, Jade, and Stylus, with autoreloading (see setup notes below for details). Includes some initial code to get set up and running fast (an index template and basic layout, base and error controllers).
 
