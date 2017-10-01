@@ -2,7 +2,7 @@
 
 MEAN build environment I use for development. Includes separate endpoints for the backend and frontend. The setup uses Gulp, Express, Angular, Jade, and Stylus, with autoreloading (see setup notes below for details). Includes some initial code to get set up and running fast (an index template and basic layout, base and error controllers).
 
-**Note:** There is an updated version in branch [mean-clean-v3](https://github.com/chriskmnds/mean-clean/tree/mean-clean-v3) (also in [PR](https://github.com/chriskmnds/mean-clean/pull/2)) with slightly improved overall setup and a more functional frontend (serving beyond SPA).
+**Note:** *There is an updated version of this project root in branch [mean-clean-v3](https://github.com/chriskmnds/mean-clean/tree/mean-clean-v3) (also in [PR](https://github.com/chriskmnds/mean-clean/pull/2)) with slightly improved overall setup and a more functional frontend (serving beyond SPA).*
 
 ## Setup
 
