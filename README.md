@@ -75,3 +75,7 @@ $ cd new-repo
 ## License
 
 MIT
+
+## Notes
+
+- There is an updated version of this setup in branch [mean-clean-v3](https://github.com/chriskmnds/mean-clean/tree/mean-clean-v3) (also in [PR](https://github.com/chriskmnds/mean-clean/pull/2)) with improved overall setup and a more functional frontend.
