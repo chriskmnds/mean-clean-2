@@ -1,7 +1,11 @@
 {
   "name": "myapp",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Backend webservice for startup app.",
+  "configs": {
+    "node_env": "development",
+    "dbServer": "mongodb://localhost:27017"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/chriskmnds/mean-clean-2.git"
@@ -12,7 +16,7 @@
     "node": "0.12.2",
     "npm": "2.7.5"
   },
-  "author": "Christos Koumenides <christoskoumenides@gmail.com>",
+  "author": "Christos Koumenides <chriskmnds@gmail.com>",
   "devDependencies": {},
   "dependencies": {
     "body-parser": "^1.15.0",

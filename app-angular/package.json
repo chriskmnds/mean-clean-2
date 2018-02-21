@@ -1,10 +1,11 @@
 {
   "name": "myapp",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "nodeApi": "http://localhost:3000",
-  "description": "Mashup/visualisation of various city/village statistics",
+  "description": "Frontend of startup app",
   "configs": {
-    "app_title": "CityStats Mashup",
+    "node_env": "production",
+    "app_title": "NEW APP",
     "node_api_base_url": "http://localhost:3000/api"
   },
   "repository": {
@@ -23,7 +24,9 @@
   },
   "author": "Christos Koumenides <chriskmnds@gmail.com>",
   "devDependencies": {
+    "body-parser": "^1.15.2",
     "del": "^1.1.1",
+    "express": "^4.14.0",
     "gulp": "^3.8.11",
     "gulp-autoprefixer": "^2.1.0",
     "gulp-concat": "^2.5.2",
@@ -43,8 +46,12 @@
     "gulp-stylus": "^2.0.1",
     "gulp-uglify": "^1.1.0",
     "gulp-webserver": "^0.9.0",
+    "jade": "^1.11.0",
     "jshint-stylish": "^1.0.1",
+    "lodash": "^4.15.0",
     "merge-stream": "^0.1.5",
+    "morgan": "^1.7.0",
+    "path": "^0.12.7",
     "run-sequence": "^1.0.2",
     "vinyl-paths": "^1.0.0"
   },

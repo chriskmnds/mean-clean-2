@@ -3,8 +3,11 @@ extends layouts/basic
 append title
   title(ng-bind="pageTitle")
 
+
 append content
-  div(ng-hide="doingResolve") This is index.jade
+  div App: #{pkg.name}
+  div Page: #{name}
+  div(ng-hide="doingResolve") This is about.jade
   div(ui-view)
   
 

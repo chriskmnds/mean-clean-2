@@ -1,0 +1,13 @@
+extends layouts/basic
+
+append title
+  title(ng-bind="pageTitle")
+
+
+append content
+  div App: #{pkg.name}
+  div Page: #{name}
+  div(ng-hide="doingResolve") This is index.jade
+  div(ui-view)
+  
+
